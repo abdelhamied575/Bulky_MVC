@@ -1,13 +1,18 @@
 ﻿using Bulky.Models.Models;
+using Bulky.Models.Models.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bulky.DataAccess.Data
 {
-    public class ApplicationDbContext:IdentityDbContext
+    public class ApplicationDbContext:IdentityDbContext<IdentityUser>
     {
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Company> Companies { get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -23,6 +28,13 @@ namespace Bulky.DataAccess.Data
                 new Category { Id = 1, Name = "Action", DisplayOrder = 1 },
                 new Category { Id = 2, Name = "SciFi", DisplayOrder = 3 },
                 new Category { Id = 3, Name = "History", DisplayOrder = 2 }
+            );
+            
+            modelBuilder.Entity<Company>().HasData(
+                new Company { Id = 1, Name = "Tech Solution",StreetAddress = "123 Tech st",City="Tech City",PostalCode="12121",State="IL",PhoneNumber="545454545" },
+                new Company { Id = 2, Name = "Vivid Books", StreetAddress = "456 Vid st", City = "Vid City", PostalCode = "13131", State = "IL", PhoneNumber = "1212121212" },
+                new Company { Id = 3 , Name = "Readers Club", StreetAddress = "789 Main st", City = "Lalal City", PostalCode = "52147", State = "NY", PhoneNumber = "1234567890" }
+
             );
 
             modelBuilder.Entity<Product>().HasData(
