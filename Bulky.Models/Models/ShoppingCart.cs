@@ -33,6 +33,11 @@ namespace Bulky.Models.Models
 
         [ValidateNever]
         [ForeignKey(nameof(ApplicationUserId))]
-        public ApplicationUser MyProperty { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
+
+
+        [NotMapped]
+        public double Price { get; set; }
+
     }
 }

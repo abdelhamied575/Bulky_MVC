@@ -40,9 +40,28 @@ button.accept-policy {
 }
 
 .footer {
-  position: absolute;
+/*  position: absolute;*/
   bottom: 0;
   width: 100%;
   white-space: nowrap;
   line-height: 60px;
 }
+
+/*#region تعديل علي ال Footer */
+
+
+html, body {
+    height: 100%;
+}
+
+main {
+    min-height: calc(100vh - 120px); /* خصم ارتفاع الـ footer */
+}
+
+footer {
+    background-color: #0d6efd;
+    color: #fff;
+}
+
+
+/*#endregion */
