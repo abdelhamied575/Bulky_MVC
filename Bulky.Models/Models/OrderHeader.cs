@@ -12,7 +12,7 @@ namespace Bulky.Models.Models
 {
     public class OrderHeader
     {
-
+        [Key]
         public int Id { get; set; }
 
         public string ApplicationUserId { get; set; }
@@ -24,7 +24,7 @@ namespace Bulky.Models.Models
 
 
         public DateTime OrderDate { get; set; }
-        public DateTime SahppingDate { get; set; }
+        public DateTime ShippingDate { get; set; }
         public double OrderTotal { get; set; }
 
         public string? OrderStatus { get; set; }

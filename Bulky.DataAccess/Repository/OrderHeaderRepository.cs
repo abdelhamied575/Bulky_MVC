@@ -19,7 +19,7 @@ namespace Bulky.DataAccess.Repository
 
         public void Update(OrderHeader orderHeader)
         {
-            _db.OrderHeaders.Add(orderHeader);
+            _db.OrderHeaders.Update(orderHeader);
         }
 
         public void UpdateStatus(int id, string orderStatus, string? PaymentStatus = null)
