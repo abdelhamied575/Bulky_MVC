@@ -34,6 +34,12 @@ namespace Bulky.Utility
 
 
 
+        public const string SessionCart = "SessionShoppingCart";
+
+
+
+
+
 
 
 
