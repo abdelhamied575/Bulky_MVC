@@ -4,6 +4,7 @@ using Bulky.Models.ViewModels;
 using Bulky.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
 using Stripe.Checkout;
@@ -21,9 +22,13 @@ namespace BulkyWeb.Areas.Admin.Controllers
         [BindProperty]
         public OrderVM OrderVM { get; set; }
 
-        public OrderController(IUnitOfWork unitOfWork)
+        private readonly IEmailSender _emailSender;
+
+
+        public OrderController(IUnitOfWork unitOfWork, IEmailSender emailSender)
         {
             _unitOfWork = unitOfWork;
+            _emailSender = emailSender;
         }
 
 
@@ -151,6 +156,9 @@ namespace BulkyWeb.Areas.Admin.Controllers
                     _unitOfWork.Save();
 
                     TempData["Success"] = "Order Details Updated Successfully";
+
+                    _emailSender.SendEmailAsync(OrderVM.OrderHeader.ApplicationUser.Email, "Order Status - Bulky Book", $"<p>Your Order Has Been Shipped - {OrderVM.OrderHeader.Id}</p>");
+
 
                     return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
 
