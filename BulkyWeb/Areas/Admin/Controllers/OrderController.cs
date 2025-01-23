@@ -57,6 +57,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
         [HttpPost]
         [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
+        [ValidateAntiForgeryToken]
         public IActionResult UpdateOrderDetail()
         {
 
@@ -107,6 +108,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
         [HttpPost]
         [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
+        [ValidateAntiForgeryToken]
         public IActionResult StartProcessing()
         {
             try
@@ -131,6 +133,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
         [HttpPost]
         [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
+        [ValidateAntiForgeryToken]
         public IActionResult ShipOrder()
         {
 
@@ -181,6 +184,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
         public IActionResult CancelOrder()
         {
@@ -231,6 +235,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
         }
 
 
+        [ValidateAntiForgeryToken]
         [ActionName("Details")]
         [HttpPost]
         public IActionResult Details_PAY_NOW()
@@ -243,7 +248,8 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
                 // Stripe Logic
 
-                var domin = "https://localhost:44304/";
+                var domin = $"{Request.Scheme}://{Request.Host.Value}/";
+
 
                 var options = new Stripe.Checkout.SessionCreateOptions
                 {

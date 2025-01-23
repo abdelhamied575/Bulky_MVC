@@ -33,7 +33,7 @@
 									<label asp-for="@Model.OrderHeader.Name"></label>
 								</div>
 								<div class="col-9">
-									<input asp-for="@Model.OrderHeader.Name" class="form-control" />
+									<input asp-for="@Model.OrderHeader.Name" required class="form-control" />
 									<span asp-validation-for="OrderHeader.Name" class="text-danger"></span>
 								</div>
 							</div>
@@ -42,7 +42,7 @@
 									<label>Phone</label>
 								</div>
 								<div class="col-9">
-									<input asp-for="@Model.OrderHeader.PhoneNumber" class="form-control" />
+									<input asp-for="@Model.OrderHeader.PhoneNumber" required class="form-control" />
 									<span asp-validation-for="OrderHeader.PhoneNumber" class="text-danger"></span>
 
 								</div>
@@ -52,7 +52,7 @@
 									<label>Street Address</label>
 								</div>
 								<div class="col-9">
-									<input asp-for="@Model.OrderHeader.StreetAddress" class="form-control" />
+									<input asp-for="@Model.OrderHeader.StreetAddress" required class="form-control" />
 									<span asp-validation-for="OrderHeader.StreetAddress" class="text-danger"></span>
 								</div>
 							</div>
@@ -61,7 +61,7 @@
 									<label>City</label>
 								</div>
 								<div class="col-9">
-									<input asp-for="@Model.OrderHeader.City" class="form-control" />
+									<input asp-for="@Model.OrderHeader.City" required class="form-control" />
 									<span asp-validation-for="OrderHeader.City" class="text-danger"></span>
 								</div>
 							</div>
@@ -70,7 +70,7 @@
 									<label>State</label>
 								</div>
 								<div class="col-9">
-									<input asp-for="@Model.OrderHeader.State" class="form-control" />
+									<input asp-for="@Model.OrderHeader.State" required class="form-control" />
 									<span asp-validation-for="OrderHeader.State" class="text-danger"></span>
 								</div>
 							</div>
@@ -79,7 +79,7 @@
 									<label>Postal Code</label>
 								</div>
 								<div class="col-9">
-									<input asp-for="@Model.OrderHeader.PostalCode" class="form-control" />
+									<input asp-for="@Model.OrderHeader.PostalCode" required class="form-control" />
 									<span asp-validation-for="OrderHeader.PostalCode" class="text-danger"></span>
 								</div>
 							</div>

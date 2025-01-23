@@ -61,57 +61,67 @@ namespace BulkyWeb.Areas.Admin.Controllers
         }
 
 
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public IActionResult Upsert(ProductVM model,IFormFile? file)
         {
-            if(ModelState.IsValid)
+            try
             {
-                string wwwRootPath = _webHostEnvironment.WebRootPath;
-                if(file is not null)
+                if (ModelState.IsValid)
                 {
-                    string fileName = Guid.NewGuid().ToString()+Path.GetExtension(file.FileName);
-                    string productPath = Path.Combine(wwwRootPath, @"images\product");
-
-                    if (!string.IsNullOrEmpty(model.Product.ImageUrl))
+                    string wwwRootPath = _webHostEnvironment.WebRootPath;
+                    if (file is not null)
                     {
-                        // Delete the old image
-                        var oldPathImage=Path.Combine(wwwRootPath,model.Product.ImageUrl.TrimStart('\\'));
-                        if(System.IO.File.Exists(oldPathImage))
+                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                        string productPath = Path.Combine(wwwRootPath, @"images\product");
+
+                        if (!string.IsNullOrEmpty(model.Product.ImageUrl))
                         {
-                            System.IO.File.Delete(oldPathImage);
+                            // Delete the old image
+                            var oldPathImage = Path.Combine(wwwRootPath, model.Product.ImageUrl.TrimStart('\\'));
+                            if (System.IO.File.Exists(oldPathImage))
+                            {
+                                System.IO.File.Delete(oldPathImage);
+                            }
                         }
+
+                        using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
+                        {
+                            file.CopyTo(fileStream);
+
+                        }
+                        model.Product.ImageUrl = @"\images\product\" + fileName;
                     }
-                    
-                    using(var fileStream=new FileStream(Path.Combine(productPath,fileName), FileMode.Create))
+                    if (model.Product.Id == 0)
                     {
-                        file.CopyTo(fileStream);
+                        _unitOfWork.Product.Add(model.Product);
 
                     }
-                    model.Product.ImageUrl = @"\images\product\" + fileName;
-                }
-                if(model.Product.Id == 0)
-                {
-                    _unitOfWork.Product.Add(model.Product);
+                    else
+                    {
+                        _unitOfWork.Product.Update(model.Product);
 
+                    }
+                    _unitOfWork.Save();
+                    TempData["success"] = "Product Created Successfully";
+                    return RedirectToAction("Index");
                 }
                 else
                 {
-                    _unitOfWork.Product.Update(model.Product);
-
+                    model.CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
+                    {
+                        Text = u.Name,
+                        Value = u.Id.ToString()
+                    });
                 }
-                _unitOfWork.Save();
-                TempData["success"] = "Product Created Successfully";
-                return RedirectToAction("Index");
+                return View(model);
             }
-            else
+            catch (Exception e)
             {
-                model.CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
-                {
-                    Text = u.Name,
-                    Value = u.Id.ToString()
-                });
+                TempData["Error"]=$"Error {e.Message}";
+                return View(model);
+
             }
-            return View(model);
 
         }
 
@@ -186,26 +196,36 @@ namespace BulkyWeb.Areas.Admin.Controllers
         }
 
         [HttpDelete]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(int? id)
         {
-            var modelToBeDeleted = _unitOfWork.Product.Get(u => u.Id == id);
-
-
-            if(modelToBeDeleted is null)
-                return Json(new {success=false,message="Error While Deleting"});
-
-            var oldPathImage = Path.Combine(_webHostEnvironment.WebRootPath, modelToBeDeleted.ImageUrl.TrimStart('\\'));
-           
-            if (System.IO.File.Exists(oldPathImage))
+            try
             {
-                System.IO.File.Delete(oldPathImage);
+                var modelToBeDeleted = _unitOfWork.Product.Get(u => u.Id == id);
+
+
+                if (modelToBeDeleted is null)
+                    return Json(new { success = false, message = "Error While Deleting" });
+
+                var oldPathImage = Path.Combine(_webHostEnvironment.WebRootPath, modelToBeDeleted.ImageUrl.TrimStart('\\'));
+
+                if (System.IO.File.Exists(oldPathImage))
+                {
+                    System.IO.File.Delete(oldPathImage);
+                }
+
+                _unitOfWork.Product.Remove(modelToBeDeleted);
+                _unitOfWork.Save();
+
+                return Json(new { success = true, message = "Deleted Successful" });
+
             }
-
-            _unitOfWork.Product.Remove(modelToBeDeleted);
-            _unitOfWork.Save();
-
-            return Json(new { success = true, message = "Deleted Successful" });
-
+            catch (Exception e)
+            {
+                TempData["Error"] = $"Error {e.Message}";
+                return Json(new { success = false, message = "Deleted Faild" });
+                
+            }
 
         }
 
